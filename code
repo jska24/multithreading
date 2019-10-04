@@ -1,0 +1,57 @@
+// wielowatkowe losowe
+using System;
+using System.Threading;
+
+
+namespace Zadania_1
+{
+    class Program
+    {
+        public void info(int p)
+        {
+            Console.WriteLine("Ilosc rdzeni mojego procka: {0}", p);
+        }
+
+        static void zadanie()
+        {
+            double start = Environment.TickCount;
+
+            int n = 10;
+            double[,] macierz = new double[n,n];
+            Random r = new Random();
+            Console.WriteLine();
+            
+            for(int i=0; i<n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    macierz[i,j] = Math.Round(100*(r.NextDouble()));
+                    Console.Write(macierz[i,j] + "\t");
+                }
+            }
+
+            double stop = Environment.TickCount;
+            double czas = stop - start;
+            Console.WriteLine("\nCzas operacji: {0} [ms]\n", czas.ToString());
+        }
+        
+        static void Main(string[] args)
+        {
+            int proc = Environment.ProcessorCount;
+            Program A = new Program();
+            A.info(proc);
+
+            Thread[] w = new Thread[proc];
+            for(int d=0; d<proc; d++)
+            {
+                Console.Write("Zad. {0}", (d+1));
+                w[d] = new Thread(zadanie);
+                w[d].Priority = ThreadPriority.Normal;
+                w[d].Start();
+                w[d].Join();
+            }
+            
+            Console.WriteLine("\n");
+        }
+    }
+}
